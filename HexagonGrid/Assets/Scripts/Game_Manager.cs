@@ -4,28 +4,27 @@ using System.Collections.Generic;
 
 public class Game_Manager : MonoBehaviour {
 
-    public GameObject PlayerHand1;
-    public GameObject PlayerHand2;
+    public GameObject 
+        PlayerHand1,
+        PlayerHand2;
 
-    public GameObject card1;
-    public GameObject card2;
-    public GameObject card3;
-    public GameObject card4;
+    public GameObject 
+        card1,
+        card2,
+        card3,
+        card4;
 
-    public List<GameObject> DeckList1;
-    public List<GameObject> DeckList2;
+    public List<GameObject> 
+        DeckList1,
+        DeckList2;
 
     GameObject Card_go;
-
-    public int hand1Size;
-    public int hand2Size;
 
     // Use this for initialization
     void Start () {
         DeckList1 = new List<GameObject>();
         DeckList2 = new List<GameObject>();
 
-        PlayerHand2.active = false;
 
         for (int i = 0; i < 5; i++)
         {
@@ -40,6 +39,8 @@ public class Game_Manager : MonoBehaviour {
             Draw(1);
             Draw(2);
         }
+
+        PlayerHand2.active = false;
     }
 	
 	// Update is called once per frame
@@ -52,23 +53,50 @@ public class Game_Manager : MonoBehaviour {
 
     }
 
+    public void Discard()
+    {
+        Destroy(Card_go);
+    }
+
     public void Draw(int x)
     {
         switch (x)
         {
             case 1:
-                int rand1 = Random.Range(0, DeckList1.Count);
-                Card_go = (GameObject)Instantiate(DeckList1[rand1], new Vector3(1,1,1), Quaternion.identity);
-                Card_go.transform.SetParent(PlayerHand1.transform);
-                DeckList1.RemoveAt(rand1);
-                hand1Size++;
+
+                //if (PlayerHand1.transform.childCount < 6)
+                //{
+                if (DeckList1.Count > 0)
+                {
+                    int rand1 = Random.Range(0, DeckList1.Count);
+                    Card_go = (GameObject)Instantiate(DeckList1[rand1]);
+                    Card_go.transform.SetParent(PlayerHand1.transform);
+                    DeckList1.RemoveAt(rand1);
+                }
+                //}
+
+                /*else
+                {
+                    Discard();
+                }*/
                 break;
+
             case 2:
-                int rand2 = Random.Range(0, DeckList2.Count);
-                Card_go = (GameObject)Instantiate(DeckList1[rand2], new Vector3(1, 1, 1), Quaternion.identity);
-                Card_go.transform.SetParent(PlayerHand2.transform);
-                DeckList2.RemoveAt(rand2);
-                hand1Size++;
+                //if (PlayerHand2.transform.childCount > 6)
+                //{
+                if (DeckList2.Count > 0)
+                {
+                    int rand2 = Random.Range(0, DeckList2.Count);
+                    Card_go = (GameObject)Instantiate(DeckList1[rand2]);
+                    Card_go.transform.SetParent(PlayerHand2.transform);
+                    DeckList2.RemoveAt(rand2);
+                }
+                //}
+
+                /*else
+                {
+                    Discard();
+                }*/
                 break;
         }
     }
@@ -76,11 +104,13 @@ public class Game_Manager : MonoBehaviour {
     void TurnSwitcher(bool player1, bool player2)
     {
         PlayerHand1.active = player1;
+        PlayerHand2.active = player2;
+
         if (player1)
         {
             Draw(1);
         }
-        PlayerHand2.active = player2;
+        
         if (player2)
         {
             Draw(2);
