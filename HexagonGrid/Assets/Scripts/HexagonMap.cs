@@ -45,9 +45,13 @@ public class HexagonMap : MonoBehaviour {
 
                 Vector3 hexPosToSpawn = new Vector3(hex.transform.position.x, hex.transform.position.y, hex.transform.position.z - 1);
 
+                //Spawn crystals
                 if(hex.name == "Hex 0_2" || hex.name == "Hex 3_0" || hex.name == "Hex 3_3") { spawnScript.Crystals(hexPosToSpawn); }
-
                 else if (hex.name == "Hex 18_2" || hex.name == "Hex 15_0" || hex.name == "Hex 15_3") { spawnScript.Crystals(hexPosToSpawn); }
+
+                //Spawn factories
+                else if(hex.name == "Hex 5_0" || hex.name == "Hex 5_3" || hex.name == "Hex 2_2") { spawnScript.Factory(hexPosToSpawn); }
+                else if (hex.name == "Hex 13_0" || hex.name == "Hex 13_3" || hex.name == "Hex 16_2") { spawnScript.Factory(hexPosToSpawn); }
 
             }
 			mapWidth = 5;

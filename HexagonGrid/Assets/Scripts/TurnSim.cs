@@ -9,6 +9,7 @@ public class TurnSim : MonoBehaviour {
 
     Crystal[] crystalArr;
     Solider[] soliderArr;
+    Factory[] factoryArr;
 
     public int turn = 1;
     public int playerTurn = 1;
@@ -49,6 +50,13 @@ public class TurnSim : MonoBehaviour {
             for (int i = 0; i < soliderArr.Length; i++)
             {
                 soliderArr[i].movet = 1;
+            }
+
+            factoryArr = FindObjectsOfType<Factory>();
+
+            for (int i = 0; i < factoryArr.Length; i++)
+            {
+                
             }
 
             canvasText.text = "Turn: " + turn + " \n Player: " + playerTurn;

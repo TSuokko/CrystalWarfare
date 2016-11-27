@@ -6,6 +6,7 @@ public class MouseManager : MonoBehaviour {
 	GridMove moveScript;
     Crystal crystal;
     Solider solider;
+    Factory factory;
 
 	// Use this for initialization
 	void Start () {
@@ -33,9 +34,9 @@ public class MouseManager : MonoBehaviour {
 			{
 				MouseOverTile (hitGameObj);
 			}
-            else if (hitGameObj.gameObject.tag == "Crystal")
+            else if (hitGameObj.gameObject.tag == "Factory")
             {
-                MouseOverCrystal(hitGameObj);
+                MouseOverFactory(hitGameObj);
             }
         }
 	
@@ -73,18 +74,18 @@ public class MouseManager : MonoBehaviour {
 		}
 	}
 
-    void MouseOverCrystal(GameObject foundObj)
+    void MouseOverFactory(GameObject foundObj)
     {
         if(Input.GetMouseButtonDown(0))
         {
-            crystal = foundObj.GetComponent<Crystal>();
-            if (crystal.transform.position.y < 5)
+            factory = foundObj.GetComponent<Factory>();
+            if (factory.transform.position.y < 4)
             {
-                crystal.SpawSolider(new Vector3(crystal.transform.position.x, crystal.transform.position.y + 1, -1));
+                factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y + 1, -1));
             }
-            else if(crystal.transform.position.y > 5)
+            else if(factory.transform.position.y > 4)
             {
-                crystal.SpawSolider(new Vector3(crystal.transform.position.x, crystal.transform.position.y - 1, -1));
+                factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y - 1, -1));
             }
         }
     }

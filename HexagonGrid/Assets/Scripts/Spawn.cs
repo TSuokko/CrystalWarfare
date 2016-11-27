@@ -3,9 +3,9 @@ using System.Collections;
 
 public class Spawn : MonoBehaviour {
 
-    public GameObject Solider;
-    public GameObject Crystal;
-    public GameObject Linker;
+    public GameObject solider;
+    public GameObject crystal;
+    public GameObject factory;
 
     // Use this for initialization
     void Start () {
@@ -14,16 +14,25 @@ public class Spawn : MonoBehaviour {
 
     public void Soliders(Vector3 SpawnPos)
     {
-        Instantiate(Solider, SpawnPos, Quaternion.identity);
+        //Instantiate(solider, SpawnPos, Quaternion.identity);
+        GameObject sold = (GameObject)Instantiate(solider, SpawnPos, Quaternion.identity);
+        if (SpawnPos.y < 4)
+        {
+            sold.GetComponent<Solider>().ownerSolider = 1;
+        }
+        else if (SpawnPos.y > 4)
+        {
+            sold.GetComponent<Solider>().ownerSolider = 2;
+        }
     }
 
     public void Crystals(Vector3 SpawnPos)
     {
-        Instantiate(Crystal, SpawnPos, Quaternion.identity);
+        Instantiate(crystal, SpawnPos, Quaternion.identity);
     }
 
-    public void Linkers(Vector3 SpawnPos)
+    public void Factory(Vector3 SpawnPos)
     {
-        Instantiate(Linker, SpawnPos, Quaternion.identity);
+        Instantiate(factory, SpawnPos, Quaternion.identity);
     }
 }

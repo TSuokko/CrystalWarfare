@@ -16,7 +16,7 @@ public class GridMove : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		
 		dir = dest - (Vector2)transform.position;
 
