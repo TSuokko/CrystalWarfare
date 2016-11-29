@@ -7,9 +7,13 @@ public class MouseManager : MonoBehaviour {
     Crystal crystal;
     Solider solider;
     Factory factory;
+    TurnSim turnMan;
+
+    Solider firstHitter, secondHitter;
 
 	// Use this for initialization
 	void Start () {
+        turnMan = TurnSim.FindObjectOfType<TurnSim>();
 	}
 	
 	// Update is called once per frame
@@ -26,7 +30,8 @@ public class MouseManager : MonoBehaviour {
 
 			GameObject hitGameObj = hitObj.transform.gameObject;
 
-			if (hitGameObj.tag == "Movable") 
+
+            if (hitGameObj.tag == "Movable") 
 			{
                 MouseOverPawn(hitGameObj);
 			} 
@@ -38,6 +43,7 @@ public class MouseManager : MonoBehaviour {
             {
                 MouseOverFactory(hitGameObj);
             }
+
         }
 	
 	}
@@ -81,11 +87,38 @@ public class MouseManager : MonoBehaviour {
             factory = foundObj.GetComponent<Factory>();
             if (factory.transform.position.y < 4)
             {
-                factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y + 1, -1));
+                if (turnMan.playerTurn == 1)
+                {
+                    factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y + 1, -1));
+                }
             }
             else if(factory.transform.position.y > 4)
             {
-                factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y - 1, -1));
+                if (turnMan.playerTurn == 2)
+                {
+                    factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y - 1, -1));
+                }
+            }
+        }
+    }
+
+    void Attack(GameObject foundObj)
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            if(moveScript != null)
+            {
+                firstHitter = foundObj.GetComponent<Solider>();
+                secondHitter = moveScript.gameObject.GetComponent<Solider>();
+
+                if (firstHitter.ownerSolider == turnMan.playerTurn)
+                {
+                    if (firstHitter.gameObject.name != secondHitter.gameObject.name)
+                    {
+                        secondHitter.healt -= firstHitter.attack;
+                        firstHitter.healt -= secondHitter.attack;
+                    }
+                }
             }
         }
     }
