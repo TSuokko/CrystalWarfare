@@ -4,6 +4,7 @@ using System.Collections;
 public class Factory : MonoBehaviour {
 
     public int charges = 0;
+    public int healt = 2;
     Solider solider;
     Spawn spawner;
     Crystal[] nCrystal;

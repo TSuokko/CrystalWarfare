@@ -49,7 +49,7 @@ public class TurnSim : MonoBehaviour {
 
             for (int i = 0; i < soliderArr.Length; i++)
             {
-                soliderArr[i].movet = 1;
+                soliderArr[i].moveInTurn = 1;
             }
 
             factoryArr = FindObjectsOfType<Factory>();

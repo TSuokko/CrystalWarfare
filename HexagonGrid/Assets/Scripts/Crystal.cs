@@ -5,6 +5,7 @@ public class Crystal : MonoBehaviour {
 
     public int ownerCrys = 0;
     public int charge = 0;
+    public int healt;
     public GameObject soliderPref;
     public Spawn spawner;
     Factory factory;

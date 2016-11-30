@@ -28,11 +28,11 @@ public class Spawn : MonoBehaviour {
 
         if (SpawnPos.y < 4)
         {
-            soldSpawn.GetComponent<Solider>().ownerSolider = 1;
+            soldSpawn.GetComponent<Solider>().ownerPlayer = 1;
         }
         else if (SpawnPos.y > 4)
         {
-            soldSpawn.GetComponent<Solider>().ownerSolider = 2;
+            soldSpawn.GetComponent<Solider>().ownerPlayer = 2;
         }
     }
 
