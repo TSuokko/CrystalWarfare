@@ -9,11 +9,14 @@ public class MouseManager : MonoBehaviour {
     Factory factory;
     TurnSim turnMan;
 
+    GameObject prevGO;
+
     Solider firstHitter, secondHitter;
 
 	// Use this for initialization
 	void Start () {
         turnMan = TurnSim.FindObjectOfType<TurnSim>();
+        prevGO = GameObject.Find("TurnManager");
 	}
 	
 	// Update is called once per frame
@@ -30,10 +33,9 @@ public class MouseManager : MonoBehaviour {
 
 			GameObject hitGameObj = hitObj.transform.gameObject;
 
-
-            if (hitGameObj.tag == "Movable") 
+            if (hitGameObj.name == "Solider(Clone)" || hitGameObj.name == "Solider2(Clone)") 
 			{
-                MouseOverPawn(hitGameObj);
+                MouseOverSolider(hitGameObj);
 			} 
 			else if (hitGameObj.gameObject.name == "Hexa") 
 			{
@@ -52,31 +54,34 @@ public class MouseManager : MonoBehaviour {
 	{
 		if (Input.GetMouseButtonDown (0) == true) {
 			if (moveScript != null) {
-                if (solider.movet > 0)
+                solider = moveScript.gameObject.GetComponent<Solider>();
+                if (solider.moveInTurn > 0)
                 {
                     moveScript.dest = (Vector2)foundObj.GetComponentInParent<Transform>().position;
-                    Debug.Log("Move DeathStar");
-                    solider.movet -= 1;
+                    solider.moveInTurn -= 1;
+                    prevGO = foundObj;
                 }
             }
 		}
 	}
 
-	void MouseOverPawn(GameObject foundObj)
+	void MouseOverSolider(GameObject foundObj)
 	{
 		if (Input.GetMouseButtonDown(0)) {
-            if (foundObj.name == "Solider(Clone)" || foundObj.name == "Solider2(Clone)")
+            solider = foundObj.GetComponent<Solider>();
+            
+            if (GameObject.FindObjectOfType<TurnSim>().playerTurn == solider.ownerPlayer)
             {
-                solider = foundObj.GetComponent<Solider>();
-
-                //Debug.Log(GameObject.FindObjectOfType<TurnSim>().playerTurn);
-
-                if (GameObject.FindObjectOfType<TurnSim>().playerTurn == solider.ownerSolider)
+                if (prevGO.name == "Solider(Clone)" || prevGO.name == "Solider2(Clone)")
+                {
+                    Attack(foundObj);
+                }
+                else
                 {
                     moveScript = foundObj.GetComponent<GridMove>();
+                    prevGO = foundObj;
                 }
             }
-
 		}
 	}
 
@@ -106,20 +111,18 @@ public class MouseManager : MonoBehaviour {
     {
         if(Input.GetMouseButtonDown(0))
         {
-            if(moveScript != null)
-            {
                 firstHitter = foundObj.GetComponent<Solider>();
-                secondHitter = moveScript.gameObject.GetComponent<Solider>();
+                secondHitter = prevGO.gameObject.GetComponent<Solider>();
 
-                if (firstHitter.ownerSolider == turnMan.playerTurn)
+                if (firstHitter.ownerPlayer == turnMan.playerTurn)
                 {
-                    if (firstHitter.gameObject.name != secondHitter.gameObject.name)
+                
+                    if (firstHitter.transform.position.magnitude <= moveScript.maxMove)
                     {
                         secondHitter.healt -= firstHitter.attack;
                         firstHitter.healt -= secondHitter.attack;
                     }
                 }
-            }
         }
     }
 }
