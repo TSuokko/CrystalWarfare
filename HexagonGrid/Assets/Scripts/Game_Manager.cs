@@ -4,47 +4,44 @@ using System.Collections.Generic;
 
 public class Game_Manager : MonoBehaviour {
 
-    public GameObject 
-        PlayerHand1,
-        PlayerHand2;
-
-    public GameObject 
+    public GameObject
+        Player1,
+        Plyaer2,
+        Player1_hand, 
+        Player2_hand,
         card1,
         card2,
         card3,
         card4;
 
     public List<GameObject> 
-        DeckList1,
-        DeckList2,
-        HandList1,
-        HandList2;
+        deck1, 
+        deck2, 
+        hand1,
+        hand2;
 
     GameObject Card_go;
+    //Camera camera;
 
     // Use this for initialization
     void Start () {
-        DeckList1 = new List<GameObject>();
-        DeckList2 = new List<GameObject>();
-        HandList1 = new List<GameObject>();
-        HandList2 = new List<GameObject>();
+        //camera = GetComponent<Camera>();
 
+        deck1 = new List<GameObject>();
+        deck2 = new List<GameObject>();
+        hand1 = new List<GameObject>();
+        hand2 = new List<GameObject>();
 
         for (int i = 0; i < 5; i++)
         {
-            DeckList1.Add(card1);
-            DeckList1.Add(card2);
-            DeckList2.Add(card3);
-            DeckList2.Add(card4);
+            deck1.Add(card1);
+            deck1.Add(card2);
         }
-
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 5; i++)
         {
-            Draw(1);
-            Draw(2);
+            deck2.Add(card3);
+            deck2.Add(card4);
         }
-
-        PlayerHand2.active = false;
     }
 	
 	// Update is called once per frame
@@ -52,14 +49,33 @@ public class Game_Manager : MonoBehaviour {
 	
 	}
 
-    public void OnCardClick()
+    float yPos(int x)
     {
-
+        float y = 0;
+        switch (x)
+        {
+            case 1:
+                y = 0.8f + Player1_hand.transform.childCount * 1.5f;
+                break;
+            case 2:
+                y = 0.8f + Player2_hand.transform.childCount * 1.5f;
+                break;
+        }
+        return y;
     }
-
-    public void Discard()
+        float xPos(int x)
     {
-        Destroy(Card_go);
+        float y = 0;
+        switch (x)
+        {
+            case 1:
+                y = -4.5f; 
+                break;
+            case 2:
+                y = 8.5f;
+                break;
+        }
+        return y;
     }
 
     public void Draw(int x)
@@ -67,79 +83,51 @@ public class Game_Manager : MonoBehaviour {
         switch (x)
         {
             case 1:
-                if (DeckList1.Count > 0)
-                {
-                    int rand1 = Random.Range(0, DeckList1.Count);
-                    Card_go = (GameObject)Instantiate(DeckList1[rand1]);
-
-                    if (HandList1.Count < 5)
-                    {
-                        Card_go.transform.SetParent(PlayerHand1.transform);
-                        DeckList1.RemoveAt(rand1);
-                        HandList1.Add(Card_go);
-                    }
-                    else
-                    {
-                        Discard();
-                    }
-                }
+                int rand1 = Random.Range(0, deck1.Count);
+                Card_go = (GameObject)Instantiate(deck1[rand1], new Vector3(xPos(1), yPos(1), 1), Quaternion.identity);
+                Card_go.transform.SetParent(Player1_hand.transform);
+                hand1.Add(Card_go);
+                deck1.RemoveAt(rand1);
                 break;
-
             case 2:
-                if (DeckList2.Count > 0)
-                {
-                    int rand2 = Random.Range(0, DeckList2.Count);
-                    Card_go = (GameObject)Instantiate(DeckList1[rand2]);
-
-                    if (HandList1.Count < 5)
-                    {
-                        Card_go.transform.SetParent(PlayerHand2.transform);
-                        DeckList2.RemoveAt(rand2);
-                        HandList2.Add(Card_go);
-                    }
-                    else
-                    {
-                        Discard();
-                    }
-                }
+                int rand2 = Random.Range(0, deck2.Count);
+                Card_go = (GameObject)Instantiate(deck2[rand2], new Vector3(xPos(2), yPos(2), 1), Quaternion.identity);
+                Card_go.transform.SetParent(Player2_hand.transform);
+                hand2.Add(Card_go);
+                deck2.RemoveAt(rand2);
                 break;
-
         }
     }
 
     void TurnSwitcher(bool player1, bool player2)
     {
-        PlayerHand1.active = player1;
-        PlayerHand2.active = player2;
-
-        if (player1)
-        {
-            Draw(1);
-        }
-        
-        if (player2)
-        {
-            Draw(2);
-        }
+        Player1.active = player1;
+        Player1_hand.active = player1;
+        Plyaer2.active = player2;
+        Player2_hand.active = player2;
     }
 
-    public void OnEndTurnClick(int x)
+    public void OnEndTurn(int x)
     {
         switch (x)
         {
             case 1:
-                TurnSwitcher(false, true);
+                TurnSwitcher(false,true);
+                if (Player1_hand.transform.childCount < 5 && deck1.Count > 0)
+                {
+                    Draw(x);
+                }
                 break;
+
             case 2:
                 TurnSwitcher(true, false);
+                if (Player2_hand.transform.childCount < 5 && deck1.Count > 0)
+                {
+                    Draw(x);
+                }
                 break;
 
         }
-    }
-
-    public void OnAreaClick()
-    {
-
     }
 
 }
