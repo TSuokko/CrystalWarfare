@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class MouseManager : MonoBehaviour {
 
@@ -9,14 +10,17 @@ public class MouseManager : MonoBehaviour {
     Factory factory;
     TurnSim turnMan;
 
-    GameObject prevGO;
+    GameObject clicked;
 
     Solider firstHitter, secondHitter;
+
+    Text popupText;
 
 	// Use this for initialization
 	void Start () {
         turnMan = TurnSim.FindObjectOfType<TurnSim>();
-        prevGO = GameObject.Find("TurnManager");
+        //prevGO = GameObject.Find("TurnManager");
+        popupText = GameObject.Find("PopUpText").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
@@ -37,7 +41,7 @@ public class MouseManager : MonoBehaviour {
 			{
                 MouseOverSolider(hitGameObj);
 			} 
-			else if (hitGameObj.gameObject.name == "Hexa") 
+			else if (hitGameObj.gameObject.name == "hexagon_texture") 
 			{
 				MouseOverTile (hitGameObj);
 			}
@@ -50,79 +54,162 @@ public class MouseManager : MonoBehaviour {
 	
 	}
 
+
+    void MouseOverFactory(GameObject foundGameObj)
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            clicked = foundGameObj;
+            if (clicked.transform.position.y < 4 && turnMan.playerTurn == 1) { foundGameObj.GetComponent<Factory>().Highlight(); }
+            else if (clicked.transform.position.y > 4 && turnMan.playerTurn == 2) { foundGameObj.GetComponent<Factory>().Highlight(); }
+        }
+    }
+
+    void MouseOverTile(GameObject foundGameObj)
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            //Check What Have Clicked
+            if(clicked.tag == "Factory")
+            {
+                //Check turn
+                if (clicked.transform.position.y < 4 && turnMan.playerTurn == 1)
+                {
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+
+                    //Spawn soldier only around factory
+                    if (lenght.magnitude <= 1f)
+                    {
+                        clicked.GetComponent<Factory>().SpawnSolider(new Vector3(foundGameObj.transform.position.x, foundGameObj.transform.position.y, -2));
+                        clicked.GetComponent<Factory>().Unhighlight();
+                        clicked = null;
+                    }
+                }
+                else if(clicked.transform.position.y > 4 && turnMan.playerTurn == 2)
+                {
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+
+                    //Spawn soldier only around factory
+                    if (lenght.magnitude <= 1f)
+                    {
+                        clicked.GetComponent<Factory>().SpawnSolider(new Vector3(foundGameObj.transform.position.x, foundGameObj.transform.position.y, -2));
+                        clicked.GetComponent<Factory>().Unhighlight();
+                        clicked = null;
+                    }
+                }
+            }
+            else if(clicked.tag == "Solider")
+            {
+                //Check if it is player turn solider
+                if(clicked.GetComponent<Solider>().ownerPlayer == turnMan.playerTurn)
+                {
+                    //Check if we move solider (only one hexagon lenght and one time)
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+                    if(lenght.magnitude <= 1f && clicked.GetComponent<Solider>().moveInTurn > 0)
+                    {
+                        clicked.GetComponent<Solider>().Move(foundGameObj.transform.position);
+                        clicked.GetComponent<Solider>().moveInTurn -= 1;
+                        clicked = null;
+                    }
+                }
+            }
+        }
+    }
+
+    void MouseOverSolider(GameObject foundGameObj)
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Check what have been press previously
+            if (clicked == null)
+            {
+                clicked = foundGameObj;
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    /*
 	void MouseOverTile(GameObject foundObj)
 	{
 		if (Input.GetMouseButtonDown (0) == true) {
 			if (moveScript != null) {
-                solider = moveScript.gameObject.GetComponent<Solider>();
+                //solider = moveScript.gameObject.GetComponent<Solider>();
                 if (solider.moveInTurn > 0)
                 {
                     moveScript.dest = (Vector2)foundObj.GetComponentInParent<Transform>().position;
                     solider.moveInTurn -= 1;
-                    prevGO = foundObj;
                 }
             }
-		}
+            
+            prevGO = foundObj;
+        }
 	}
 
 	void MouseOverSolider(GameObject foundObj)
 	{
 		if (Input.GetMouseButtonDown(0)) {
             solider = foundObj.GetComponent<Solider>();
-            
+            moveScript = foundObj.GetComponent<GridMove>();
             if (GameObject.FindObjectOfType<TurnSim>().playerTurn == solider.ownerPlayer)
             {
-                if (prevGO.name == "Solider(Clone)" || prevGO.name == "Solider2(Clone)")
+                if (prevGO.name == "Solider(Clone)" || prevGO.name == "Solider2(Clone)" && foundObj.gameObject.name != prevGO.name)
                 {
                     Attack(foundObj);
                 }
                 else
                 {
                     moveScript = foundObj.GetComponent<GridMove>();
-                    prevGO = foundObj;
                 }
             }
-		}
+            prevGO = foundObj;
+        }
 	}
 
     void MouseOverFactory(GameObject foundObj)
     {
         if(Input.GetMouseButtonDown(0))
         {
-            factory = foundObj.GetComponent<Factory>();
+           
             if (factory.transform.position.y < 4)
             {
                 if (turnMan.playerTurn == 1)
                 {
-                    factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y + 1, -1));
+                    //Find Where To Spawn With Click
+                    factory = foundObj.GetComponent<Factory>();
+                    //factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y + 1, -1));
                 }
             }
             else if(factory.transform.position.y > 4)
             {
                 if (turnMan.playerTurn == 2)
                 {
-                    factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y - 1, -1));
+                    factory = foundObj.GetComponent<Factory>();
+                    //factory.SpawnSolider(new Vector3(factory.transform.position.x, factory.transform.position.y - 1, -1));
                 }
             }
+            prevGO = foundObj;
         }
     }
 
     void Attack(GameObject foundObj)
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-                firstHitter = foundObj.GetComponent<Solider>();
-                secondHitter = prevGO.gameObject.GetComponent<Solider>();
+        firstHitter = foundObj.GetComponent<Solider>();
+        secondHitter = prevGO.gameObject.GetComponent<Solider>();
 
-                if (firstHitter.ownerPlayer == turnMan.playerTurn)
-                {
                 
-                    if (firstHitter.transform.position.magnitude <= moveScript.maxMove)
-                    {
-                        secondHitter.healt -= firstHitter.attack;
-                        firstHitter.healt -= secondHitter.attack;
-                    }
-                }
+        if (firstHitter.transform.position.magnitude <= moveScript.maxMove)
+        {
+            secondHitter.healt -= firstHitter.attack;
+            firstHitter.healt -= secondHitter.attack;
         }
+      
     }
+    */
+
+
+
 }

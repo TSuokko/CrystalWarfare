@@ -19,6 +19,11 @@ public class Solider : MonoBehaviour {
     {
         Destroy(gameObject);
     }
+
+    public void Move(Vector3 place)
+    {
+        GetComponent<GridMove>().dest = place;
+    }
     
 
 }

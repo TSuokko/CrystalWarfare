@@ -10,6 +10,9 @@ public class Factory : MonoBehaviour {
     Crystal[] nCrystal;
     Crystal crystal;
 
+    public Material normalMaterial;
+    public Material highlightMaterial;
+
 	public void SpawnSolider(Vector3 spawnPos)
     {
         spawner = GameObject.Find("Spawner").GetComponent<Spawn>();
@@ -32,6 +35,16 @@ public class Factory : MonoBehaviour {
         }
 
 
+    }
+
+    public void Highlight()
+    {
+        gameObject.GetComponent<MeshRenderer>().material = highlightMaterial;
+    }
+
+    public void Unhighlight()
+    {
+        gameObject.GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
     public void DrawCard()

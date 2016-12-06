@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class HexagonMap : MonoBehaviour {
 
 	public GameObject hexPref;
