@@ -42,6 +42,12 @@ public class Game_Manager : MonoBehaviour {
             deck2.Add(card3);
             deck2.Add(card4);
         }
+
+        for (int i = 0; i < 3; i++)
+        {
+            Draw(1);
+            Draw(2);
+        }
     }
 	
 	// Update is called once per frame
@@ -55,10 +61,10 @@ public class Game_Manager : MonoBehaviour {
         switch (x)
         {
             case 1:
-                y = 0.8f + Player1_hand.transform.childCount * 1.5f;
+                y = 1.8f + Player1_hand.transform.childCount * 1.5f;
                 break;
             case 2:
-                y = 0.8f + Player2_hand.transform.childCount * 1.5f;
+                y = 1.8f + Player2_hand.transform.childCount * 1.5f;
                 break;
         }
         return y;
@@ -69,10 +75,10 @@ public class Game_Manager : MonoBehaviour {
         switch (x)
         {
             case 1:
-                y = -4.5f; 
+                y = -3.6f; 
                 break;
             case 2:
-                y = 8.5f;
+                y = 9.6f;
                 break;
         }
         return y;

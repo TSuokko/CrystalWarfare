@@ -10,7 +10,7 @@ public class MouseManager : MonoBehaviour {
     Factory factory;
     TurnSim turnMan;
 
-    GameObject clicked;
+    public GameObject clicked;
 
     Solider firstHitter, secondHitter;
 
@@ -37,11 +37,15 @@ public class MouseManager : MonoBehaviour {
 
 			GameObject hitGameObj = hitObj.transform.gameObject;
 
+            /*if (hitGameObj.name == "card_soldier(Clone)" || hitGameObj.name == "card_tank(Clone)" || hitGameObj.name == "card_robot(Clone)" || hitGameObj.name == "card_robotank(Clone)")
+            {
+                MouseOverCard(hitGameObj);
+            }*/
             if (hitGameObj.name == "Solider(Clone)" || hitGameObj.name == "Solider2(Clone)") 
 			{
                 MouseOverSolider(hitGameObj);
-			} 
-			else if (hitGameObj.gameObject.name == "hexagon_texture") 
+			}
+            else if (hitGameObj.gameObject.name == "hexagon_texture") 
 			{
 				MouseOverTile (hitGameObj);
 			}
@@ -49,19 +53,30 @@ public class MouseManager : MonoBehaviour {
             {
                 MouseOverFactory(hitGameObj);
             }
+            
 
         }
 	
 	}
 
+    void MouseOverCard(GameObject foundGameObj)
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            clicked = foundGameObj;
+        }
+    }
 
     void MouseOverFactory(GameObject foundGameObj)
     {
         if (Input.GetMouseButtonDown(0))
         {
-            clicked = foundGameObj;
-            if (clicked.transform.position.y < 4 && turnMan.playerTurn == 1) { foundGameObj.GetComponent<Factory>().Highlight(); }
-            else if (clicked.transform.position.y > 4 && turnMan.playerTurn == 2) { foundGameObj.GetComponent<Factory>().Highlight(); }
+            /*if (clicked.tag == "Card")
+            {*/
+                clicked = foundGameObj;
+                if (clicked.transform.position.y < 4 && turnMan.playerTurn == 1) { foundGameObj.GetComponent<Factory>().Highlight(); }
+                else if (clicked.transform.position.y > 4 && turnMan.playerTurn == 2) { foundGameObj.GetComponent<Factory>().Highlight(); }
+            /*}*/
         }
     }
 
