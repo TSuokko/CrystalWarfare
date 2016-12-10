@@ -37,11 +37,12 @@ public class MouseManager : MonoBehaviour {
 
 			GameObject hitGameObj = hitObj.transform.gameObject;
 
-            /*if (hitGameObj.name == "card_soldier(Clone)" || hitGameObj.name == "card_tank(Clone)" || hitGameObj.name == "card_robot(Clone)" || hitGameObj.name == "card_robotank(Clone)")
+            if (hitGameObj.name == "Card"/*hitGameObj.name == "card_soldier(Clone)" || hitGameObj.name == "card_tank(Clone)" || hitGameObj.name == "card_robot(Clone)" || hitGameObj.name == "card_robotank(Clone)"*/)
             {
+                //Debug.Log(hitGameObj.tag);
                 MouseOverCard(hitGameObj);
-            }*/
-            if (hitGameObj.name == "Solider(Clone)" || hitGameObj.name == "Solider2(Clone)") 
+            }
+            else if (hitGameObj.name == "Solider(Clone)" || hitGameObj.name == "Solider2(Clone)") 
 			{
                 MouseOverSolider(hitGameObj);
 			}
@@ -71,12 +72,14 @@ public class MouseManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            /*if (clicked.tag == "Card")
-            {*/
+            if (clicked.name == "Card")
+            {
+                Destroy(clicked.transform.parent.gameObject);
                 clicked = foundGameObj;
                 if (clicked.transform.position.y < 4 && turnMan.playerTurn == 1) { foundGameObj.GetComponent<Factory>().Highlight(); }
                 else if (clicked.transform.position.y > 4 && turnMan.playerTurn == 2) { foundGameObj.GetComponent<Factory>().Highlight(); }
-            /*}*/
+
+            }
         }
     }
 
