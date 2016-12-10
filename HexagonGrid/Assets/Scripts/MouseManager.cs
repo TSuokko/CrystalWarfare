@@ -39,7 +39,6 @@ public class MouseManager : MonoBehaviour {
 
             if (hitGameObj.name == "Card"/*hitGameObj.name == "card_soldier(Clone)" || hitGameObj.name == "card_tank(Clone)" || hitGameObj.name == "card_robot(Clone)" || hitGameObj.name == "card_robotank(Clone)"*/)
             {
-                //Debug.Log(hitGameObj.tag);
                 MouseOverCard(hitGameObj);
             }
             else if (hitGameObj.name == "Solider(Clone)" || hitGameObj.name == "Solider2(Clone)") 
@@ -79,6 +78,15 @@ public class MouseManager : MonoBehaviour {
                 if (clicked.transform.position.y < 4 && turnMan.playerTurn == 1) { foundGameObj.GetComponent<Factory>().Highlight(); }
                 else if (clicked.transform.position.y > 4 && turnMan.playerTurn == 2) { foundGameObj.GetComponent<Factory>().Highlight(); }
 
+            }
+            else if(clicked.tag == "Solider")
+            {
+                if(foundGameObj.GetComponent<Factory>().ownerPlayer != clicked.GetComponent<Solider>().ownerPlayer)
+                {
+                    foundGameObj.GetComponent<Factory>().healt -= clicked.GetComponent<Solider>().attack;
+                    clicked.GetComponent<Solider>().attackInTurn -= 1;
+                    clicked = null;
+                }
             }
         }
     }
@@ -141,11 +149,25 @@ public class MouseManager : MonoBehaviour {
             //Check what have been press previously
             if (clicked == null)
             {
-                clicked = foundGameObj;
+                if (foundGameObj.GetComponent<Solider>().ownerPlayer == turnMan.playerTurn)
+                {
+                    clicked = foundGameObj;
+                }
             }
-            else
+            else if(clicked.tag == "Solider")
             {
+                if(foundGameObj.GetComponent<Solider>().ownerPlayer != clicked.GetComponent<Solider>().ownerPlayer)
+                {
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
 
+                    if (lenght.magnitude <= 1f)
+                    {
+                        foundGameObj.GetComponent<Solider>().healt -= clicked.GetComponent<Solider>().attack;
+                        clicked.GetComponent<Solider>().attackInTurn -= 1;
+
+                        clicked = null;
+                    }
+                }
             }
         }
     }

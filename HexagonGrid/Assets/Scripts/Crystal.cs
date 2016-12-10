@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Crystal : MonoBehaviour {
 
-    public int ownerCrys = 0;
+    public int ownerPlayer = 0;
     public int charge = 0;
     public int healt;
     public GameObject soliderPref;

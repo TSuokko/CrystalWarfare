@@ -38,11 +38,15 @@ public class Spawn : MonoBehaviour {
 
     public void Crystals(Vector3 SpawnPos)
     {
-        Instantiate(crystal, SpawnPos, Quaternion.identity);
+        GameObject crysGO = (GameObject)Instantiate(crystal, SpawnPos, Quaternion.identity);
+        if(SpawnPos.y < 4) { crysGO.GetComponent<Crystal>().ownerPlayer = 1; }
+        else if (SpawnPos.y > 4) { crysGO.GetComponent<Crystal>().ownerPlayer = 2; }
     }
 
     public void Factory(Vector3 SpawnPos)
     {
-        Instantiate(factory, SpawnPos, Quaternion.identity);
+        GameObject facGO = (GameObject)Instantiate(factory, SpawnPos, Quaternion.identity);
+        if (SpawnPos.y < 4) { facGO.GetComponent<Factory>().ownerPlayer = 1; }
+        else if (SpawnPos.y > 4) { facGO.GetComponent<Factory>().ownerPlayer = 2; }
     }
 }

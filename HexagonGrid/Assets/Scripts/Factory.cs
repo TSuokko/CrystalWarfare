@@ -5,6 +5,7 @@ public class Factory : MonoBehaviour {
 
     public int charges = 0;
     public int healt = 2;
+    public int ownerPlayer = 0;
     Solider solider;
     Spawn spawner;
     Crystal[] nCrystal;
@@ -13,7 +14,17 @@ public class Factory : MonoBehaviour {
     public Material normalMaterial;
     public Material highlightMaterial;
 
-	public void SpawnSolider(Vector3 spawnPos)
+    void Update()
+    {
+        if (healt <= 0) { ZeroHealth(); }
+    }
+
+    void ZeroHealth()
+    {
+        Destroy(gameObject);
+    }
+
+    public void SpawnSolider(Vector3 spawnPos)
     {
         spawner = GameObject.Find("Spawner").GetComponent<Spawn>();
 
