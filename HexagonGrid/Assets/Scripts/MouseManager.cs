@@ -83,9 +83,14 @@ public class MouseManager : MonoBehaviour {
             {
                 if(foundGameObj.GetComponent<Factory>().ownerPlayer != clicked.GetComponent<Solider>().ownerPlayer)
                 {
-                    foundGameObj.GetComponent<Factory>().healt -= clicked.GetComponent<Solider>().attack;
-                    clicked.GetComponent<Solider>().attackInTurn -= 1;
-                    clicked = null;
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+
+                    if (lenght.magnitude < 1f)
+                    {
+                        foundGameObj.GetComponent<Factory>().healt -= clicked.GetComponent<Solider>().attack;
+                        clicked.GetComponent<Solider>().attackInTurn -= 1;
+                        clicked = null;
+                    }
                 }
             }
         }

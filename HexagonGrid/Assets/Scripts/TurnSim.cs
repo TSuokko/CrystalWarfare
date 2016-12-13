@@ -19,6 +19,10 @@ public class TurnSim : MonoBehaviour {
     int player1Fact = 0;
     int player2Fact = 0;
 
+    float timer = 2f;
+
+    bool startCount = false;
+
 	// Use this for initialization
 	void Start () {
         canvasText = GameObject.Find("TextTurn").GetComponent<Text>();
@@ -27,6 +31,21 @@ public class TurnSim : MonoBehaviour {
 
         canvasText.text = "Turn: " + turn + " \n Player: " + playerTurn;
         canvasPopup.text = "Game Starts!";
+        startCount = true;
+    }
+
+    void Update()
+    {
+        if(startCount == true)
+        {
+            timer -= Time.deltaTime;
+            if(timer <= 0)
+            {
+                GameObject.Find("PopUpText").SetActive(false);
+                startCount = false;
+                timer = 3f;
+            }
+        }
     }
 
     public void nextTurn()
