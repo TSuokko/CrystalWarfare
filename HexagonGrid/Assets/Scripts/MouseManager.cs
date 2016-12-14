@@ -45,6 +45,10 @@ public class MouseManager : MonoBehaviour {
 			{
                 MouseOverSolider(hitGameObj);
 			}
+            else if(hitGameObj.tag == "Tank")
+            {
+                MouseOverTank(hitGameObj);
+            }
             else if (hitGameObj.gameObject.name == "hexagon_texture") 
 			{
 				MouseOverTile (hitGameObj);
@@ -93,6 +97,20 @@ public class MouseManager : MonoBehaviour {
                     }
                 }
             }
+            else if(clicked.tag == "Tank")
+            {
+                if (foundGameObj.GetComponent<Factory>().ownerPlayer != clicked.GetComponent<Tank>().ownerPlayer)
+                {
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+
+                    if (lenght.magnitude < 1f)
+                    {
+                        foundGameObj.GetComponent<Factory>().healt -= clicked.GetComponent<Tank>().attack;
+                        clicked.GetComponent<Tank>().attackInTurn -= 1;
+                        clicked = null;
+                    }
+                }
+            }
         }
     }
 
@@ -101,7 +119,7 @@ public class MouseManager : MonoBehaviour {
         if(Input.GetMouseButtonDown(0))
         {
             //Check What Have Clicked
-            if(clicked.tag == "Factory")
+            if (clicked.tag == "Factory")
             {
                 //Check turn
                 if (clicked.transform.position.y < 4 && turnMan.playerTurn == 1)
@@ -116,7 +134,7 @@ public class MouseManager : MonoBehaviour {
                         clicked = null;
                     }
                 }
-                else if(clicked.transform.position.y > 4 && turnMan.playerTurn == 2)
+                else if (clicked.transform.position.y > 4 && turnMan.playerTurn == 2)
                 {
                     Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
 
@@ -129,17 +147,30 @@ public class MouseManager : MonoBehaviour {
                     }
                 }
             }
-            else if(clicked.tag == "Solider")
+            else if (clicked.tag == "Solider")
             {
                 //Check if it is player turn solider
-                if(clicked.GetComponent<Solider>().ownerPlayer == turnMan.playerTurn)
+                if (clicked.GetComponent<Solider>().ownerPlayer == turnMan.playerTurn)
                 {
                     //Check if we move solider (only one hexagon lenght and one time)
                     Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
-                    if(lenght.magnitude <= 1f && clicked.GetComponent<Solider>().moveInTurn > 0)
+                    if (lenght.magnitude <= 1f && clicked.GetComponent<Solider>().moveInTurn > 0)
                     {
                         clicked.GetComponent<Solider>().Move(foundGameObj.transform.position);
                         clicked.GetComponent<Solider>().moveInTurn -= 1;
+                        clicked = null;
+                    }
+                }
+            }
+            else if (clicked.tag == "Tank")
+            {
+                if (clicked.GetComponent<Tank>().ownerPlayer == turnMan.playerTurn)
+                {
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+                    if (lenght.magnitude <= 1f && clicked.GetComponent<Tank>().moveInTurn > 0)
+                    {
+                        clicked.GetComponent<Tank>().Move(foundGameObj.transform.position);
+                        clicked.GetComponent<Tank>().moveInTurn -= 1;
                         clicked = null;
                     }
                 }
@@ -173,6 +204,62 @@ public class MouseManager : MonoBehaviour {
                         clicked = null;
                     }
                 }
+            }
+            else if(clicked.tag == "Tank")
+            {
+                if (foundGameObj.GetComponent<Solider>().ownerPlayer != clicked.GetComponent<Tank>().ownerPlayer)
+                {
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+
+                    if (lenght.magnitude <= 1f)
+                    {
+                        foundGameObj.GetComponent<Solider>().healt -= clicked.GetComponent<Tank>().attack;
+                        clicked.GetComponent<Tank>().attackInTurn -= 1;
+
+                        clicked = null;
+                    }
+                }
+            }
+        }
+    }
+
+    void MouseOverTank(GameObject foundGameObj)
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            if(clicked.tag == "Solider")
+            {
+                if (foundGameObj.GetComponent<Tank>().ownerPlayer != clicked.GetComponent<Solider>().ownerPlayer)
+                {
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+
+                    if (lenght.magnitude <= 1f)
+                    {
+                        foundGameObj.GetComponent<Tank>().healt -= clicked.GetComponent<Solider>().attack;
+                        clicked.GetComponent<Solider>().attackInTurn -= 1;
+
+                        clicked = null;
+                    }
+                }
+            }
+            else if (clicked.tag == "Tank")
+            {
+                if (foundGameObj.GetComponent<Tank>().ownerPlayer != clicked.GetComponent<Tank>().ownerPlayer)
+                {
+                    Vector2 lenght = (Vector2)foundGameObj.transform.position - (Vector2)clicked.transform.position;
+
+                    if (lenght.magnitude <= 1f)
+                    {
+                        foundGameObj.GetComponent<Tank>().healt -= clicked.GetComponent<Tank>().attack;
+                        clicked.GetComponent<Tank>().attackInTurn -= 1;
+
+                        clicked = null;
+                    }
+                }
+            }
+            else
+            {
+                clicked = foundGameObj;
             }
         }
     }
