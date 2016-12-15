@@ -65,12 +65,14 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Card_Manager.cs" />
     <Compile Include="Assets\Scripts\Crystal.cs" />
+    <Compile Include="Assets\Scripts\Deck_Manager.cs" />
     <Compile Include="Assets\Scripts\Factory.cs" />
-    <Compile Include="Assets\Scripts\Game_Manager.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GridMove.cs" />
     <Compile Include="Assets\Scripts\HexagonMap.cs" />
     <Compile Include="Assets\Scripts\MouseManager.cs" />
     <Compile Include="Assets\Scripts\Solider.cs" />
+    <Compile Include="Assets\Scripts\SoundEffects.cs" />
     <Compile Include="Assets\Scripts\Spawn.cs" />
     <Compile Include="Assets\Scripts\Tank.cs" />
     <Compile Include="Assets\Scripts\TurnSim.cs" />

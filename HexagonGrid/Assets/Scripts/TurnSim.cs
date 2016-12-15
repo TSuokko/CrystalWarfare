@@ -10,6 +10,7 @@ public class TurnSim : MonoBehaviour {
     Crystal[] crystalArr;
     Solider[] soliderArr;
     Factory[] factoryArr;
+    Tank[] tankArr;
 
     public int turn = 1;
     public int playerTurn = 1;
@@ -75,6 +76,14 @@ public class TurnSim : MonoBehaviour {
             {
                 soliderArr[i].moveInTurn = 1;
                 soliderArr[i].attackInTurn = 1;
+            }
+
+            tankArr = FindObjectsOfType<Tank>();
+
+            for (int i = 0; i < tankArr.Length; i++)
+            {
+                tankArr[i].moveInTurn = 1;
+                tankArr[i].attackInTurn = 1;
             }
 
             PlayerWinCheck();

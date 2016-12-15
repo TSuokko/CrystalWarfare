@@ -11,16 +11,17 @@ public class MouseManager : MonoBehaviour {
     TurnSim turnMan;
 
     public GameObject clicked;
+    GameObject cardSelected;
 
     Solider firstHitter, secondHitter;
 
-    Text popupText;
+    //Text popupText;
 
 	// Use this for initialization
 	void Start () {
         turnMan = TurnSim.FindObjectOfType<TurnSim>();
         //prevGO = GameObject.Find("TurnManager");
-        popupText = GameObject.Find("PopUpText").GetComponent<Text>();
+        //popupText = GameObject.Find("PopUpText").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
@@ -67,7 +68,8 @@ public class MouseManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            clicked = foundGameObj;
+            Debug.Log("Card Parent: " + foundGameObj.transform.parent.name);
+            clicked = foundGameObj.transform.parent.gameObject;
         }
     }
 
@@ -75,12 +77,20 @@ public class MouseManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (clicked.name == "Card")
+            if (clicked.name == "card_soldier(Clone)" || clicked.name == "card_tank(Clone)" || clicked.name == "card_robot(Clone)" || clicked.name == "card_robotank(Clone)")
             {
-                Destroy(clicked.transform.parent.gameObject);
-                clicked = foundGameObj;
-                if (clicked.transform.position.y < 4 && turnMan.playerTurn == 1) { foundGameObj.GetComponent<Factory>().Highlight(); }
-                else if (clicked.transform.position.y > 4 && turnMan.playerTurn == 2) { foundGameObj.GetComponent<Factory>().Highlight(); }
+                if (foundGameObj.transform.position.y < 4 && turnMan.playerTurn == 1)
+                {
+                    foundGameObj.GetComponent<Factory>().Highlight();
+                    cardSelected = clicked;
+                    clicked = foundGameObj;
+                }
+                else if (foundGameObj.transform.position.y > 4 && turnMan.playerTurn == 2)
+                {
+                    foundGameObj.GetComponent<Factory>().Highlight();
+                    cardSelected = clicked;
+                    clicked = foundGameObj;
+                }
 
             }
             else if(clicked.tag == "Solider")
@@ -91,8 +101,15 @@ public class MouseManager : MonoBehaviour {
 
                     if (lenght.magnitude < 1f)
                     {
-                        foundGameObj.GetComponent<Factory>().healt -= clicked.GetComponent<Solider>().attack;
-                        clicked.GetComponent<Solider>().attackInTurn -= 1;
+                        if (clicked.GetComponent<Solider>().attackInTurn > 0)
+                        {
+                            foundGameObj.GetComponent<Factory>().healt -= clicked.GetComponent<Solider>().attack;
+                            clicked.GetComponent<Solider>().attackInTurn -= 1;
+                            clicked = null;
+                        }
+                    }
+                    else
+                    {
                         clicked = null;
                     }
                 }
@@ -105,8 +122,15 @@ public class MouseManager : MonoBehaviour {
 
                     if (lenght.magnitude < 1f)
                     {
-                        foundGameObj.GetComponent<Factory>().healt -= clicked.GetComponent<Tank>().attack;
-                        clicked.GetComponent<Tank>().attackInTurn -= 1;
+                        if (clicked.GetComponent<Tank>().attackInTurn > 0)
+                        {
+                            foundGameObj.GetComponent<Factory>().healt -= clicked.GetComponent<Tank>().attack;
+                            clicked.GetComponent<Tank>().attackInTurn -= 1;
+                            clicked = null;
+                        }
+                    }
+                    else
+                    {
                         clicked = null;
                     }
                 }
@@ -129,9 +153,54 @@ public class MouseManager : MonoBehaviour {
                     //Spawn soldier only around factory
                     if (lenght.magnitude <= 1f)
                     {
-                        clicked.GetComponent<Factory>().SpawnSolider(new Vector3(foundGameObj.transform.position.x, foundGameObj.transform.position.y, -2));
+                        //Check card name
+                        if (cardSelected.name == "card_soldier(Clone)")
+                        {
+                            //Check crystal charges
+                            if (clicked.GetComponent<Factory>().CheckCrystalCarges(2) == 1)
+                            {
+                                clicked.GetComponent<Factory>().SpawnSolider(new Vector3(foundGameObj.transform.position.x, foundGameObj.transform.position.y, -2));
+                                clicked.GetComponent<Factory>().Unhighlight();
+                                clicked = null;
+                                Destroy(cardSelected.gameObject);
+                                cardSelected = null;
+                            }
+                            else
+                            {
+                                clicked.GetComponent<Factory>().Unhighlight();
+                                clicked = null;
+                                cardSelected = null;
+                            }
+                        }
+                        else if (cardSelected.name == "card_tank(Clone)")
+                        {
+                            if (clicked.GetComponent<Factory>().CheckCrystalCarges(6) == 1)
+                            {
+                                clicked.GetComponent<Factory>().SpawnTank(new Vector3(foundGameObj.transform.position.x, foundGameObj.transform.position.y, -2));
+                                clicked.GetComponent<Factory>().Unhighlight();
+                                clicked = null;
+                                Destroy(cardSelected.gameObject);
+                                cardSelected = null;
+                            }
+                            else
+                            {
+                                clicked.GetComponent<Factory>().Unhighlight();
+                                clicked = null;
+                                cardSelected = null;
+                            }
+                        }
+                        else
+                        {
+                            clicked.GetComponent<Factory>().Unhighlight();
+                            clicked = null;
+                            cardSelected = null;
+                        }
+                    }
+                    else
+                    {
                         clicked.GetComponent<Factory>().Unhighlight();
                         clicked = null;
+                        cardSelected = null;
                     }
                 }
                 else if (clicked.transform.position.y > 4 && turnMan.playerTurn == 2)
@@ -141,9 +210,42 @@ public class MouseManager : MonoBehaviour {
                     //Spawn soldier only around factory
                     if (lenght.magnitude <= 1f)
                     {
-                        clicked.GetComponent<Factory>().SpawnSolider(new Vector3(foundGameObj.transform.position.x, foundGameObj.transform.position.y, -2));
+                        //Check card name
+                        if (cardSelected.name == "card_robot(Clone)")
+                        {
+                            //Check crystal charges
+                            if (clicked.GetComponent<Factory>().CheckCrystalCarges(2) == 1)
+                            {
+                                clicked.GetComponent<Factory>().SpawnSolider(new Vector3(foundGameObj.transform.position.x, foundGameObj.transform.position.y, -2));
+                                clicked.GetComponent<Factory>().Unhighlight();
+                                clicked = null;
+                                Destroy(cardSelected.gameObject);
+                                cardSelected = null;
+                            }
+                        }
+                        else if (cardSelected.name == "card_robotank(Clone)")
+                        {
+                            if (clicked.GetComponent<Factory>().CheckCrystalCarges(6) == 1)
+                            {
+                                clicked.GetComponent<Factory>().SpawnTank(new Vector3(foundGameObj.transform.position.x, foundGameObj.transform.position.y, -2));
+                                clicked.GetComponent<Factory>().Unhighlight();
+                                clicked = null;
+                                Destroy(cardSelected.gameObject);
+                                cardSelected = null;
+                            }
+                        }
+                        else
+                        {
+                            clicked.GetComponent<Factory>().Unhighlight();
+                            clicked = null;
+                            cardSelected = null;
+                        }
+                    }
+                    else
+                    {
                         clicked.GetComponent<Factory>().Unhighlight();
                         clicked = null;
+                        cardSelected = null;
                     }
                 }
             }
@@ -160,6 +262,10 @@ public class MouseManager : MonoBehaviour {
                         clicked.GetComponent<Solider>().moveInTurn -= 1;
                         clicked = null;
                     }
+                    else
+                    {
+                        clicked = null;
+                    }
                 }
             }
             else if (clicked.tag == "Tank")
@@ -171,6 +277,10 @@ public class MouseManager : MonoBehaviour {
                     {
                         clicked.GetComponent<Tank>().Move(foundGameObj.transform.position);
                         clicked.GetComponent<Tank>().moveInTurn -= 1;
+                        clicked = null;
+                    }
+                    else
+                    {
                         clicked = null;
                     }
                 }
@@ -198,10 +308,12 @@ public class MouseManager : MonoBehaviour {
 
                     if (lenght.magnitude <= 1f)
                     {
-                        foundGameObj.GetComponent<Solider>().healt -= clicked.GetComponent<Solider>().attack;
-                        clicked.GetComponent<Solider>().attackInTurn -= 1;
-
-                        clicked = null;
+                        if (clicked.GetComponent<Solider>().attackInTurn > 0)
+                        {
+                            foundGameObj.GetComponent<Solider>().healt -= clicked.GetComponent<Solider>().attack;
+                            clicked.GetComponent<Solider>().attackInTurn -= 1;
+                            clicked = null;
+                        }
                     }
                 }
             }
@@ -213,10 +325,12 @@ public class MouseManager : MonoBehaviour {
 
                     if (lenght.magnitude <= 1f)
                     {
-                        foundGameObj.GetComponent<Solider>().healt -= clicked.GetComponent<Tank>().attack;
-                        clicked.GetComponent<Tank>().attackInTurn -= 1;
-
-                        clicked = null;
+                        if (clicked.GetComponent<Tank>().attackInTurn > 0)
+                        {
+                            foundGameObj.GetComponent<Solider>().healt -= clicked.GetComponent<Tank>().attack;
+                            clicked.GetComponent<Tank>().attackInTurn -= 1;
+                            clicked = null;
+                        }
                     }
                 }
             }
@@ -227,7 +341,15 @@ public class MouseManager : MonoBehaviour {
     {
         if(Input.GetMouseButtonDown(0))
         {
-            if(clicked.tag == "Solider")
+            //Check what have been press previously
+            if (clicked == null)
+            {
+                if (foundGameObj.GetComponent<Tank>().ownerPlayer == turnMan.playerTurn)
+                {
+                    clicked = foundGameObj;
+                }
+            }
+            else if (clicked.tag == "Solider")
             {
                 if (foundGameObj.GetComponent<Tank>().ownerPlayer != clicked.GetComponent<Solider>().ownerPlayer)
                 {
@@ -235,10 +357,12 @@ public class MouseManager : MonoBehaviour {
 
                     if (lenght.magnitude <= 1f)
                     {
-                        foundGameObj.GetComponent<Tank>().healt -= clicked.GetComponent<Solider>().attack;
-                        clicked.GetComponent<Solider>().attackInTurn -= 1;
-
-                        clicked = null;
+                        if (clicked.GetComponent<Solider>().attackInTurn > 0)
+                        {
+                            foundGameObj.GetComponent<Tank>().healt -= clicked.GetComponent<Solider>().attack;
+                            clicked.GetComponent<Solider>().attackInTurn -= 1;
+                            clicked = null;
+                        }
                     }
                 }
             }
@@ -250,16 +374,14 @@ public class MouseManager : MonoBehaviour {
 
                     if (lenght.magnitude <= 1f)
                     {
-                        foundGameObj.GetComponent<Tank>().healt -= clicked.GetComponent<Tank>().attack;
-                        clicked.GetComponent<Tank>().attackInTurn -= 1;
-
-                        clicked = null;
+                        if (clicked.GetComponent<Tank>().attackInTurn > 0)
+                        {
+                            foundGameObj.GetComponent<Tank>().healt -= clicked.GetComponent<Tank>().attack;
+                            clicked.GetComponent<Tank>().attackInTurn -= 1;
+                            clicked = null;
+                        }
                     }
                 }
-            }
-            else
-            {
-                clicked = foundGameObj;
             }
         }
     }

@@ -22,7 +22,7 @@ public class HexagonMap : MonoBehaviour {
 
     float xPos = 0;
 
-    int xLoop = 0;
+    //int xLoop = 0;
 
     // Use this for initialization
     void Start () {

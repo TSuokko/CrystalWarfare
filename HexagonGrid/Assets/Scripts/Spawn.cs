@@ -3,12 +3,14 @@ using System.Collections;
 
 public class Spawn : MonoBehaviour {
 
-    public GameObject solider1;
-    public GameObject solider2;
+    public GameObject soldier;
+    public GameObject tank;
+    public GameObject robot;
+    public GameObject robotank;
     public GameObject crystal;
     public GameObject factory;
 
-    GameObject soldSpawn;
+    GameObject spawnedPawn;
 
     // Use this for initialization
     void Start () {
@@ -19,20 +21,40 @@ public class Spawn : MonoBehaviour {
     {
         if (SpawnPos.y <= 4)
         {
-            soldSpawn = (GameObject)Instantiate(solider1, SpawnPos, Quaternion.identity);
+            spawnedPawn = (GameObject)Instantiate(soldier, SpawnPos, Quaternion.identity);
         }
         else if (SpawnPos.y >= 4)
         {
-            soldSpawn = (GameObject)Instantiate(solider2, SpawnPos, Quaternion.identity);
+            spawnedPawn = (GameObject)Instantiate(robot, SpawnPos, Quaternion.identity);
         }
 
         if (SpawnPos.y < 4)
         {
-            soldSpawn.GetComponent<Solider>().ownerPlayer = 1;
+            spawnedPawn.GetComponent<Solider>().ownerPlayer = 1;
         }
         else if (SpawnPos.y > 4)
         {
-            soldSpawn.GetComponent<Solider>().ownerPlayer = 2;
+            spawnedPawn.GetComponent<Solider>().ownerPlayer = 2;
+        }
+    }
+    public void Tanks(Vector3 SpawnPos)
+    {
+        if (SpawnPos.y <= 4)
+        {
+            spawnedPawn = (GameObject)Instantiate(tank, SpawnPos, Quaternion.identity);
+        }
+        else if (SpawnPos.y >= 4)
+        {
+            spawnedPawn = (GameObject)Instantiate(robotank, SpawnPos, Quaternion.identity);
+        }
+
+        if (SpawnPos.y < 4)
+        {
+            spawnedPawn.GetComponent<Tank>().ownerPlayer = 1;
+        }
+        else if (SpawnPos.y > 4)
+        {
+            spawnedPawn.GetComponent<Tank>().ownerPlayer = 2;
         }
     }
 

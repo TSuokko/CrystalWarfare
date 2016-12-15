@@ -5,7 +5,7 @@ public class Tank : MonoBehaviour {
 
     public int ownerPlayer = 0;
     public int moveInTurn = 1;
-    public int crystalCost = 2;
+    public int crystalCost = 6;
     public int healt = 4;
     public int movementLenght = 1;
     public int attack = 4;

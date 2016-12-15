@@ -44,8 +44,53 @@ public class Factory : MonoBehaviour {
                 }
             }
         }
+    }
+    public void SpawnTank(Vector3 spawnPos)
+    {
+        spawner = GameObject.Find("Spawner").GetComponent<Spawn>();
 
+        nCrystal = FindObjectsOfType<Crystal>();
 
+        //Check charges
+        for (int i = 0; i < nCrystal.Length; i++)
+        {
+            Vector2 lenght = (Vector2)gameObject.transform.position - (Vector2)nCrystal[i].transform.position;
+
+            if (lenght.magnitude < 1f)
+            {
+                if (nCrystal[i].charge >= 2)
+                {
+                    spawner.Tanks(spawnPos);
+                    nCrystal[i].takeCharges(6);
+                }
+            }
+        }
+    }
+
+    public int CheckCrystalCarges(int chargecheck)
+    {
+        int ret = 0;
+        charges = 0;
+
+        nCrystal = FindObjectsOfType<Crystal>();
+
+        //Check charges
+        for (int i = 0; i < nCrystal.Length; i++)
+        {
+            Vector2 lenght = (Vector2)gameObject.transform.position - (Vector2)nCrystal[i].transform.position;
+
+            if (lenght.magnitude < 1f)
+            {
+                charges += nCrystal[i].charge;
+            }
+        }
+
+        if(charges >= chargecheck)
+        {
+            ret = 1;
+        }
+
+        return ret;
     }
 
     public void Highlight()
