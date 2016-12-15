@@ -10,30 +10,25 @@ public class Menu_Manager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Rules.active = false;
+        Rules.SetActive(false);
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     public void OnStartPress(){
-        
+        Application.LoadLevel(1);
     }
 
     public void OnRulesPress(){
-        Menu.active = false;
-        Rules.active = true;
+        Menu.SetActive(false);
+        Rules.SetActive(true);
     }
 
     public void OnRulesExitPress()
     {
-        Menu.active = true;
-        Rules.active = false;
+        Menu.SetActive(true);
+        Rules.SetActive(false);
     }
 
     public void OnQuitPress(){
-
+        Application.Quit();
     }
 }
